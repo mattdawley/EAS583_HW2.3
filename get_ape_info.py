@@ -55,7 +55,7 @@ def get_ape_info(apeID):
 	assert all( [a in data.keys() for a in ['owner','image','eyes']] ), f"return value should include the keys 'owner','image' and 'eyes'"
 	return data
 
-print(get_ape_info(7893))
+#print(get_ape_info(7893))
 """Test
 print("Ape # 1", get_ape_info(1))
 print("-----")
