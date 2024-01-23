@@ -28,21 +28,34 @@ def get_ape_info(apeID):
 	assert isinstance(apeID,int), f"{apeID} is not an int"
 	assert 1 <= apeID, f"{apeID} must be at least 1"
 
+	# create contract variable
 	contract = web3.eth.contract(address=bayc_address, abi=abi)
+
+	# get uri and owner of given ape id
 	result = contract.functions.tokenURI(apeID).call()
 	owner = contract.functions.ownerOf(apeID).call()
+
+	# get data for given ape
 	uri = result.replace("ipfs://","")
 	base_url = "https://gateway.pinata.cloud/ipfs/"
 	pinata_gateway_url = base_url+uri
 	headers = {"content_type": "json"}
 	response = requests.get(pinata_gateway_url, headers)
 	j_data = response.json()
-	data = {'owner': owner, 'image': j_data["image"], 'eyes': j_data["attributes"][3]["value"] }
-	print(data)
+
+	#Determine eye color
+	eye_color = None
+	for attr in j_data["attributes"]:
+		if attr["trait_type"] == "Eyes":
+			eye_color = attr["value"]
+
+	data = {'owner': owner, 'image': j_data["image"], 'eyes': eye_color }
+
 	assert isinstance(data,dict), f'get_ape_info{apeID} should return a dict' 
 	assert all( [a in data.keys() for a in ['owner','image','eyes']] ), f"return value should include the keys 'owner','image' and 'eyes'"
 	return data
 
+print(get_ape_info(7893))
 """Test
 print("Ape # 1", get_ape_info(1))
 print("-----")
