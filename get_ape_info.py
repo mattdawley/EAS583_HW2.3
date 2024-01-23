@@ -38,7 +38,7 @@ def get_ape_info(apeID):
 	response = requests.get(pinata_gateway_url, headers)
 	j_data = response.json()
 	data = {'owner': owner, 'image': j_data["image"], 'eyes': j_data["attributes"][3]["value"] }
-
+	print(data)
 	assert isinstance(data,dict), f'get_ape_info{apeID} should return a dict' 
 	assert all( [a in data.keys() for a in ['owner','image','eyes']] ), f"return value should include the keys 'owner','image' and 'eyes'"
 	return data
